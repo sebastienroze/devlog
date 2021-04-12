@@ -1,0 +1,53 @@
+<head>
+    <link rel="stylesheet" href="bootstrap.min.css">
+</head>
+<script>
+    refreshUtilisateurs();
+    function refreshUtilisateurs() {
+        fetch("http://localhost:8080/user/utilisateurs")
+            .then(resultat => resultat.json())
+            .then(listeUtilisateur => {
+                const ul = document.querySelector("#liste-utilisateur")
+                ul.innerHTML = "";
+                listeUtilisateur.forEach(utilisateur => {
+
+                    ul.innerHTML +=
+                        '<div class="card text-white bg-primary mb-3" style="max-width: 20rem;">'
+                        + '<div class="card-header">"' + utilisateur.statut.denomination + '"</div>'
+                        + '<div class="card-body">'
+                        + '<h4 class="card-title">' + utilisateur.login + '</h4>'
+                        + '<p class="card-text">Some quick example text to build on the card title and make up the bulk of the card\'s content.</p > '
+                        + '</div>'
+                        + '</div>';
+
+                    "<li>" + utilisateur.login + "</li>"
+                })
+            })
+    }
+    function ajoutUtilisateur() {
+        const textLogin = document.querySelector("#login").value;
+        const utilisateur = {
+            "login": textLogin,
+            "statut": { "id": 1 }
+        }
+        const configurationRequete = {
+            method: "POST",
+            headers: {
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify(utilisateur)
+        }
+        fetch("http://localhost:8080/admin/utilisateur", configurationRequete)
+            .then(res => refreshUtilisateurs())
+    }
+
+</script>
+<div>
+    <label>login</label>
+    <input id="login" type="text">
+    <button onclick="ajoutUtilisateur()">ajouter</button>
+</div>
+<h1>Liste des utilisateurs</h1>
+<div id="liste-utilisateur">
+
+</div>
